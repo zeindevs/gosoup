@@ -104,7 +104,7 @@ func (r Root) FindStrict(args ...string) *Root {
 		return &Root{Error: errNodeElementEmpty}
 	}
 
-	n, ok := findOne(r.Node, args, false, false)
+	n, ok := findOne(r.Node, args, false, true)
 	if !ok {
 		return &Root{Error: newErrorAttrs(ErrElementNotFound, args)}
 	}
@@ -255,8 +255,8 @@ func (r Root) HTML() string {
 }
 
 func (r Root) FullText() string {
-	var buf bytes.Buffer
 	var f func(*html.Node)
+	var buf bytes.Buffer
 
 	f = func(n *html.Node) {
 		if n == nil {
@@ -318,7 +318,7 @@ func findOne(n *html.Node, args []string, uni, strict bool) (*html.Node, bool) {
 					attr := n.Attr[i]
 					searchAttrName := args[1]
 					searchAttrVal := args[2]
-					if (strict && attributeAndValueEquals(attr, searchAttrName, searchAttrName)) ||
+					if (strict && attributeAndValueEquals(attr, searchAttrName, searchAttrVal)) ||
 						(!strict && attributeContainsValue(attr, searchAttrName, searchAttrVal)) {
 						return n, true
 					}
